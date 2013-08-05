@@ -105,11 +105,15 @@ loadCode(function(err, code) {
     var modules = detective(editor.editor.getValue())
     modules.map(function(module) {
       var tag =
-        '<span class="tag"><a target="_blank" href="http://npmjs.org/' +
-          module + '"><span>' + module + '&nbsp;&nbsp;</span></a></span>'
+        '<span class="tag"><a target="_blank" href="#MoreInfo" class="moduleLink" module="' + module + '"><span>' + module + '&nbsp;&nbsp;</span></a></span>'
       packageTags.append(tag)
     })
-    if (modules.length === 0) packageTags.append('<div class="tagsinput-add">No Modules Required Yet</div>')
+    if (modules.length === 0) {
+      packageTags.append('<div class="tagsinput-add">No Modules Required Yet</div>')
+      $('#packageInfo').hide();
+    }else{
+      $('#packageInfo').show();
+    }
   })
 
   var actionsMenu = $(".actionsMenu")
@@ -137,6 +141,7 @@ loadCode(function(err, code) {
       elementClass(outputEl).remove('hidden')
       elementClass(editorEl).add('hidden')
       sandbox.bundle(editor.editor.getValue())
+      //clearTooltipMessage()
     },
 
     edit: function() {
@@ -314,5 +319,12 @@ function tooltipMessage(cssClass, text) {
     message.innerHTML = text
     document.querySelector('body').appendChild(message)
     message.appendChild(close)
+  }
+}
+
+function clearTooltipMessage(){
+  var message = document.querySelector('.alert')
+  if (message) {
+    message.classList.add('hidden')
   }
 }
