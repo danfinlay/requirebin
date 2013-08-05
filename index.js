@@ -49,6 +49,7 @@ function enableShare(gistID) {
 
 function loadCode(cb) {
   if (gistID) {
+    console.log("Gist ID: "+gistID)
     loadingClass.remove('hidden')
     return jsonp('https://api.github.com/gists/' + gistID, function(err, gist) {
       loadingClass.add('hidden')
@@ -103,6 +104,7 @@ loadCode(function(err, code) {
     if (!valid) return
     packageTags.html('')
     var modules = detective(editor.editor.getValue())
+    console.log("Modules: "+JSON.stringify(modules, null, '\t'))
     modules.map(function(module) {
       var tag =
         '<span class="tag"><a target="_blank" href="#MoreInfo" class="moduleLink" module="' + module + '"><span>' + module + '&nbsp;&nbsp;</span></a></span>'
@@ -111,8 +113,6 @@ loadCode(function(err, code) {
     if (modules.length === 0) {
       packageTags.append('<div class="tagsinput-add">No Modules Required Yet</div>')
       $('#packageInfo').hide();
-    }else{
-      $('#packageInfo').show();
     }
   })
 
@@ -292,6 +292,16 @@ loadCode(function(err, code) {
       });
     })
   }
+})
+
+var moduleButtons = $('.moduleLink')
+moduleButtons.live('click', function(e){
+  e.preventDefault()
+  var clickedModule = $(this).attr('module')
+  console.log("Clicked "+clickedModule)
+  var moduleLink = 'http://www.npmjs.org/'+clickedModule
+  $('#currentPackageLink > a').attr('href', moduleLink)
+  $('#packageInfo').show(200);
 })
 
 /*
